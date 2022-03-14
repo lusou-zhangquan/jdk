@@ -3400,6 +3400,9 @@ void Threads::destroy_vm() {
 
   VM_Exit::set_vm_exited();
 
+  // clean code cache after all java code stopped
+  codeCache_exit();
+
   // Clean up ideal graph printers after the VMThread has started
   // the final safepoint which will block all the Compiler threads.
   // Note that this Thread has already logically exited so the

@@ -160,10 +160,7 @@ RuntimeBlob::RuntimeBlob(
 }
 
 void CodeBlob::flush() {
-  FREE_C_HEAP_ARRAY(unsigned char, _oop_maps);
-  _oop_maps = NULL;
-  NOT_PRODUCT(_asm_remarks.clear());
-  NOT_PRODUCT(_dbg_strings.clear());
+  clean_oop_maps();
 }
 
 void CodeBlob::set_oop_maps(OopMapSet* p) {
@@ -176,6 +173,12 @@ void CodeBlob::set_oop_maps(OopMapSet* p) {
   }
 }
 
+void CodeBlob::clean_oop_maps() {
+  FREE_C_HEAP_ARRAY(unsigned char, _oop_maps);
+  _oop_maps = NULL;
+  NOT_PRODUCT(_asm_remarks.clear());
+  NOT_PRODUCT(_dbg_strings.clear());
+}
 
 void RuntimeBlob::trace_new_stub(RuntimeBlob* stub, const char* name1, const char* name2) {
   // Do not hold the CodeCache lock during name formatting.

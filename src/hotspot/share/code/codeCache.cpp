@@ -982,6 +982,54 @@ void codeCache_init() {
   CodeCache::initialize();
 }
 
+void CodeCache::clear_heap(CodeHeap* heap) {
+  int cleaned_blob_num = 0;
+  CodeBlob *cb = (CodeBlob*)(heap->first());
+  while (cb != NULL) {
+    if (cb->oop_maps() != nullptr) {
+      cb->clean_oop_maps();
+    }
+    cleaned_blob_num++;
+    cb = (CodeBlob*)(heap->next(cb));
+  }
+  if (PrintCodeHeapClear) {
+    tty->print_cr("cleaned_blob_num=%d", cleaned_blob_num);
+  }
+}
+
+void CodeCache::check_cache_cleared() {
+  FOR_ALL_HEAPS(heap) {
+    CodeBlob *cb = (CodeBlob*)((*heap)->first());
+    while (cb != NULL) {
+      CodeBlob* next = (CodeBlob*)((*heap)->next(cb));
+      if (cb->oop_maps() != nullptr) {
+        tty->print_cr("Code cache not clean");
+        return;
+      }
+      cb = next;
+    }
+  }
+  tty->print_cr("Code cache cleared");
+}
+
+// Iteratively clear code blobs without lock or safepoint.
+void CodeCache::clear_before_exit() {
+  if (PrintCodeHeapClear) {
+    tty->print_cr("heap_blob_count=%d", blob_count());
+  }
+  FOR_ALL_HEAPS(heap) {
+    clear_heap(*heap);
+  }
+  if (PrintCodeHeapClear) {
+    check_cache_cleared();
+  }
+}
+
+// Triggered at the final phase of vm exit, when java thread has been destructed.
+void codeCache_exit() {
+  CodeCache::clear_before_exit();
+}
+
 //------------------------------------------------------------------------------------------------
 
 int CodeCache::number_of_nmethods_with_dependencies() {

@@ -35,9 +35,10 @@
 // use "Foo* foo;", create a function init_foo() in foo.c, and add a call
 // to init_foo in init.cpp.
 
-jint init_globals();     // call constructors at startup (main Java thread)
-void vm_init_globals();  // call constructors at startup (VM thread)
-void exit_globals();     // call destructors before exit
+jint init_globals();        // call constructors at startup (main Java thread)
+void vm_init_globals();     // call constructors at startup (VM thread)
+void exit_globals();        // call destructors before exit
+void codeCache_exit();      // call code cache exit after all java code stopped
 
 bool is_init_completed();     // returns true when bootstrapping has completed
 void wait_init_completed();   // wait until set_init_completed() has been called

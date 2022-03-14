@@ -126,6 +126,10 @@ class CodeCache : AllStatic {
  public:
   // Initialization
   static void initialize();
+  // Clear code cache before vm exit
+  static void clear_before_exit();
+  static void clear_heap(CodeHeap* heap);
+  static void check_cache_cleared();
   static size_t page_size(bool aligned = true, size_t min_pages = 1); // Returns the page size used by the CodeCache
 
   static int code_heap_compare(CodeHeap* const &lhs, CodeHeap* const &rhs);

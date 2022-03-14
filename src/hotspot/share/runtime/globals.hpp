@@ -627,6 +627,9 @@ const intx ObjectAlignmentInBytes = 8;
           "Print the code cache memory usage each time a method is "        \
           "compiled")                                                       \
                                                                             \
+  product(bool, PrintCodeHeapClear, false,                                  \
+          "Print the code cache clear details when exiting")                \
+                                                                            \
   product(bool, PrintCodeHeapAnalytics, false, DIAGNOSTIC,                  \
           "Print code heap usage statistics on exit and on full condition") \
                                                                             \
